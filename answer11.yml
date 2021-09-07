@@ -1,0 +1,10 @@
+---
+- name: change default target
+  hosts: ansible1
+  tasks:
+    - name: change target symlink
+      file:
+        src: /usr/lib/systemd/system/graphical.target
+        dest: /etc/systemd/system/default.target
+        state: link 
+# graphical.target

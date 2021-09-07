@@ -1,0 +1,26 @@
+---
+- name: copy file and populate
+  hosts: all
+  tasks:
+    - name: copy out specs file
+      copy: 
+        src: specs.empty
+        dest: /tmp/specs.txt
+    - name: add in hostname info
+      lineinfile:
+        regex: ^HOST
+        line: HOST={{ansible_hostname}}
+        state: present
+        path: /tmp/specs.txt
+    - name: add in memory info
+      lineinfile:
+        regex: ^MEMORY
+        line: MEMORY={{ansible_memtotal_mb}}
+        state: present
+        path: /tmp/specs.txt
+    - name: add in bios info
+      lineinfile:
+        regex: ^BIOS
+        line: BIOS={{ansible_bios_version}}
+        state: present
+        path: /tmp/specs.txt
