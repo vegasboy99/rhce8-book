@@ -1,0 +1,29 @@
+---
+- name: Creating users and setting passwords
+  hosts: all
+  vars_files:
+    - users_list2.yml
+    - lock.yml
+  tasks:
+    - name: remove devops group on dev nodes
+      group:
+        name: devops
+      when: ('dev' in group_names )
+    - name: remove manager group on prod nodes
+      group:
+        name: manager
+      when: ('prod' in group_names )
+    - name: create user for dev nodes
+      user:
+        name: "{{item.username}}"
+        groups: devops
+        password: "{{ pw_dev | password_hash('sha512') }}"
+      when: ('dev' in group_names) and ('developer' in item.job)
+      loop: "{{ users }}"
+    - name: create users for prod nodes
+      user:
+        name: "{{item.username}}"
+        groups: manager
+        password: "{{ pw_mgr | password_hash('sha512') }}"
+      when: ('prod' in group_names) and ('manager' in item.job)
+      loop: "{{ users }}"

@@ -1,0 +1,2 @@
+ansible-galaxy install -r requirements.yml -p /home/dbean/roles
+# Must have and be in the directory for requirements.yml to run this

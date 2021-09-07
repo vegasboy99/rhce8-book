@@ -1,0 +1,15 @@
+---
+
+- name: issue file
+  hosts: dev,prod
+  tasks:
+    - name: edit development mode
+      copy:
+        content: Development
+        dest: /tmp/issue
+      when: "'dev' in group_names"
+    - name: edit production mode
+      copy:
+        content: Production
+        dest: /tmp/issue
+      when: "'prod' in group_names"

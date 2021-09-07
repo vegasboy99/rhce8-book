@@ -1,0 +1,11 @@
+users:
+  - username: dill
+    job: developer
+  - username: do
+    job: manager
+  - username: asshole
+    job: test
+  - username: tommy
+    job: developer
+  - username: richie
+    job: manager
