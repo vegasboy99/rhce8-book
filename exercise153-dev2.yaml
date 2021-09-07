@@ -5,7 +5,7 @@
   tasks:
   - name: set vgroups sizes in variables
     set_fact:
-      vgsize: "{{ ansible_facts['lvm']['vgs']['cl']['size_g'] | int }}" 
+      vgsize: "{{ ansible_facts['lvm']['vgs']['rhel']['size_g'] | int }}" 
   - name: debug this
     debug:
       msg: the value of vgsize is {{ vgsize }}

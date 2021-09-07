@@ -1,0 +1,9 @@
+---
+- name: Setting a job to run everyday at noon
+  hosts: all
+  tasks:
+    - cron:
+        name: datejob set
+        hour: "12"
+        user: root
+        job: "date >> /root/datefile"
