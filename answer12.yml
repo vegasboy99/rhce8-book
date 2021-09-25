@@ -24,3 +24,9 @@
         line: BIOS={{ansible_bios_version}}
         state: present
         path: /tmp/specs.txt
+    - name: add in vda size
+      lineinfile:
+        regex: ^VDA_DISK_SIZE
+        line: VDA_DISK_SIZE={%if ansible_devices.vda is defined%}{{ansible_devices.vda.size}}{%else%}NONE{%endif%}
+        state: present
+        path: /tmp/specs.txt

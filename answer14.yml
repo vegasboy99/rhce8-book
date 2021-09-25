@@ -1,0 +1,26 @@
+---
+- name: Create a directory and set permissions to allow for it to served by httpd
+  hosts: ansible1
+  tasks:
+    - name: Create webdev user
+      user:
+        name: webdev
+        state: present
+    - name: Create a directory
+      file:
+        mode: '2755'
+        path: /webdev
+        owner: webdev
+        group: webdev
+        state: directory
+    - name: Create a symlink to it
+      file:
+        src: /webdev
+        path: /var/www/html/webdev
+        state: link
+    - name:
+      copy:
+        content: Development
+        dest: /webdev/index.html
+        owner: webdev
+    
