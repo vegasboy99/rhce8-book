@@ -31,7 +31,7 @@
       append: yes
       state: present
   - name: set a password for this user
-    shell: 'echo password | passwd --stdin ansible'
+    shell: 'echo Qualcomm1 | passwd --stdin ansible'
   - name: enable sudo without passwords
     lineinfile:
       path: /etc/sudoers

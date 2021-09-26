@@ -48,20 +48,20 @@
       dest: /home/ansible/.ssh/authorized_keys
   tags: setuphost
 
-- name: use subscription manager to register and set up repos
-  hosts: "{{ newhost }}"
-  vars_files:
-  - exercise123-vault.yaml
-  tasks:
-  - name: register and subscribe {{ newhost }}
-    redhat_subscription:
-      username: "{{ rhsm_user }}"
-      password: "{{ rhsm_password }}"
-      state: present
-  - name: configure additional repo access
-    rhsm_repository:
-      name: 
-      - rh-gluster-3-client-for-rhel-8-x86_64-rpms
-      - rhel-8-for-x86_64-appstream-debug-rpms 
-      state: present
-  tags: registerhost
+# - name: use subscription manager to register and set up repos
+#   hosts: "{{ newhost }}"
+#   vars_files:
+#   - exercise123-vault.yaml
+#   tasks:
+#   - name: register and subscribe {{ newhost }}
+#     redhat_subscription:
+#       username: "{{ rhsm_user }}"
+#       password: "{{ rhsm_password }}"
+#       state: present
+#   - name: configure additional repo access
+#     rhsm_repository:
+#       name: 
+#       - rh-gluster-3-client-for-rhel-8-x86_64-rpms
+#       - rhel-8-for-x86_64-appstream-debug-rpms 
+#       state: present
+#   tags: registerhost
