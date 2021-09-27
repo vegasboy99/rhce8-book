@@ -5,11 +5,11 @@
     - users_list2.yml
     - lock.yml
   tasks:
-    - name: remove devops group on dev nodes
+    - name: add in devops group on dev nodes
       group:
         name: devops
       when: ('dev' in group_names )
-    - name: remove manager group on prod nodes
+    - name: add in manager group on prod nodes
       group:
         name: manager
       when: ('prod' in group_names )
