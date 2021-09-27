@@ -9,10 +9,12 @@
       group:
         name: devops
       when: ('dev' in group_names )
+    
     - name: add in manager group on prod nodes
       group:
         name: manager
       when: ('prod' in group_names )
+    
     - name: create user for dev nodes
       user:
         name: "{{item.username}}"
@@ -20,6 +22,7 @@
         password: "{{ pw_dev | password_hash('sha512') }}"
       when: ('dev' in group_names) and ('developer' in item.job)
       loop: "{{ users }}"
+    
     - name: create users for prod nodes
       user:
         name: "{{item.username}}"

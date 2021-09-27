@@ -1,6 +1,6 @@
 ---
 - name: Create a directory and set permissions to allow for it to served by httpd
-  hosts: ansible1
+  hosts: ansible2
   tasks:
     - name: Create webdev user
       user:
@@ -18,9 +18,22 @@
         src: /webdev
         path: /var/www/html/webdev
         state: link
-    - name:
+    - name: Create index.html
       copy:
         content: Development
         dest: /webdev/index.html
-        owner: webdev
-    
+    - name: install selinux policies
+      yum:
+        name: python3-policycoreutils
+        state: present
+    - name: allow http to this directory
+      sefcontext:
+        target: '/webdev(/.*)?'
+        setype: httpd_sys_content_t
+        state: present
+    - name: restore the content
+      command: restorecon -Rv /webdev
+    - name: restart httpd
+      service:
+        name: httpd
+        state: restarted

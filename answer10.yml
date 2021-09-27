@@ -1,0 +1,9 @@
+---
+- name: change all hosts files with jinja
+  hosts: all
+  tasks:
+    - name: test
+      template:
+        src: hosts.j2
+        dest: /tmp/hosts
+      when: "'dev' in group_names"
