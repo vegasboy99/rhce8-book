@@ -1,0 +1,11 @@
+---
+- name: logical volume changes
+  hosts: all
+  tasks:
+    - name: create logical volume with size 150 MB
+      
+    - name: create smaller volume at 80 MB if not enough size
+
+    - name: display message if the volume group doesn't exist
+
+    - name: create XFS filesystem on all lv0 volumes

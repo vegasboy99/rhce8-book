@@ -4,3 +4,9 @@
   Welcome to httpd
 {% endif %} 
 
+
+
+
+# if dev host make the motd file say welcome to dev server {{ ansible_fqdn }}
+# if prod host make the motd file say welcome to prod server {{ ansible_fqdn }}
+# if sql host make the motd file say welcome to the mysql server {{ ansible_fqdn}}
