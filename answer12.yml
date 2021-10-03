@@ -6,6 +6,7 @@
       copy: 
         src: specs.empty
         dest: /tmp/specs.txt
+   
     - name: add in hostname info
       lineinfile:
         regex: ^HOST
@@ -30,3 +31,16 @@
         line: VDA_DISK_SIZE={%if ansible_devices.vda is defined%}{{ansible_devices.vda.size}}{%else%}NONE{%endif%}
         state: present
         path: /tmp/specs.txt
+    - name: add in my vda size to vdb
+      lineinfile:
+        regex: ^VDB_DISK_SIZE
+        line: VDB_DISK_SIZE={%if ansible_devices.nvme0n1 is defined%}{{ansible_devices.nvme0n1.size}}{%else%}NONE{%endif%}
+        state: present
+        path: /tmp/specs.txt
+    
+    - name: Return the file contents
+      shell: cat /tmp/specs.txt
+      register: content
+    - name: print file contents
+      debug:
+        var: "content"
