@@ -13,6 +13,8 @@
         content: Production
         dest: /tmp/issue
       when: "'prod' in group_names"
+    
+    
     - name: show production system content
       shell: cat /tmp/issue
       register: issue_content

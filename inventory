@@ -1,5 +1,15 @@
+[dev]
 ansible1
+
+[proxy]
+control
+
+[prod]
 ansible2
+
+[webservers:children]
+dev
+prod
+
+[test]
 ansible3
-ansible4
-ansible5

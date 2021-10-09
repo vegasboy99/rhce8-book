@@ -3,12 +3,11 @@
   hosts:
     - ansible1.example.com
     - ansible2.example.com
-    - ansible3.example.com
   vars:
-    - disk_name: sdb
+    - disk_name: nvme0n2
     - partition_number: 1
-    - vg_name: vgdata
-    - lv_name: lvdata
+    - vg_name: vg0
+    - lv_name: lv0
     - disk_gb_threshold: 1
     - disk_bytes_threshold: "{{ disk_gb_threshold * 1024 * 1024 * 1024 }}"
     - large_lv_size: 1500M

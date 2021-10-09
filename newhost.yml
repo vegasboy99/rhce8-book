@@ -1,0 +1,23 @@
+---
+- name: Setting up user account on new hosts
+  hosts: ansible2
+  tasks:
+    - name: Create user derek
+      user:
+        name: derek
+        state: present
+        groups: wheel
+        append: yes
+    - name: set the derek password
+      shell: 'echo Qualcomm1 | passwd --stdin derek'
+    - name: set up passwordless sudo
+      lineinfile:
+        path: /etc/sudoers
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
+    - name: copy SSH key for derek over to remote host
+      authorized_key:
+        user: derek
+        state: present
+        key: "{{ lookup ('file', '/tmp/id_rsa.pub') }}"
