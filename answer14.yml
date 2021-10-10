@@ -32,7 +32,7 @@
         setype: httpd_sys_content_t
         state: present
     - name: restore the content
-      command: restorecon -Rv /webdev
+      shell: restorecon -Rv /webdev
     - name: restart httpd
       service:
         name: httpd
