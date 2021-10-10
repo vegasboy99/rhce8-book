@@ -28,13 +28,13 @@
     - name: add in vda size
       lineinfile:
         regex: ^VDA_DISK_SIZE
-        line: VDA_DISK_SIZE={%if ansible_devices.vda is defined%}{{ansible_devices.vda.size}}{%else%}NONE{%endif%}
+        line: VDA_DISK_SIZE={%if ansible_devices.nvme0n1 is defined%}{{ansible_devices.nvme0n1.size}}{%else%}NONE{%endif%}
         state: present
         path: /tmp/specs.txt
     - name: add in my vda size to vdb
       lineinfile:
         regex: ^VDB_DISK_SIZE
-        line: VDB_DISK_SIZE={%if ansible_devices.nvme0n1 is defined%}{{ansible_devices.nvme0n1.size}}{%else%}NONE{%endif%}
+        line: VDB_DISK_SIZE={%if ansible_devices.nvme0n2 is defined%}{{ansible_devices.nvme0n2.size}}{%else%}NONE{%endif%}
         state: present
         path: /tmp/specs.txt
     
@@ -43,4 +43,4 @@
       register: content
     - name: print file contents
       debug:
-        var: "content"
+        var: content.stdout_lines
