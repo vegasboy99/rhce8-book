@@ -1,26 +1,39 @@
 ---
 - name: create users and groups
-  hosts: dev,prod
+  hosts: all
   vars_files:
     - lock.yml
     - users_list2.yml
   tasks:
     - name: create dev group for dev hosts only
       group:
-        name: dev
+        name: devops
         state: present
       when: "'dev' in group_names"
+
     - name: create prod group for prod hosts only
       group:
-        name: prod
+        name: managers
         state: present
-      when: "'prod' in group_names"
+      when: ('prod' in group_names) or ('test' in group_names)
+
     - name: create dev users
       user:
         name: "{{item.username}}"
         state: present
-        group: dev
-        password: "{{ 'pw_dev' | password_hash('sha512', 'mysecretsalt') }}"
+        group: devops
+        password: "{{ pw_dev | password_hash('sha512', 'mysecretsalt') }}"
       when: ('dev' in group_names) and ('developer' in item.job)
       loop: "{{users}}"
+    
+    - name: create manager users on both prod and test
+      user:
+        name: "{{item.username}}"
+        state: present
+        group: managers
+        password: "{{ pw_mgr | password_hash('sha512', 'mysecretsalt') }}"
+      when: ('prod' in group_names) and ('manager' in item.job) or ('test' in group_names) and ('manager' in item.job)
+      loop: "{{users}}"
+
+      
 
