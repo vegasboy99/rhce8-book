@@ -34,6 +34,3 @@
         password: "{{ pw_mgr | password_hash('sha512', 'mysecretsalt') }}"
       when: ('prod' in group_names) and ('manager' in item.job) or ('test' in group_names) and ('manager' in item.job)
       loop: "{{users}}"
-
-      
-
