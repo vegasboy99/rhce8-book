@@ -38,7 +38,7 @@
         state: present
         path: /tmp/specs.txt
     
-    - name: Return the file contents
+    - name: Return the file output
       shell: cat /tmp/specs.txt
       register: content
     - name: print file contents
