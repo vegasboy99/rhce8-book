@@ -1,9 +1,0 @@
----
-- name: jinja host file
-  hosts: all
-  tasks:
-    - name: copy out template
-      template:
-        src: hosts2.j2
-        dest: /root/myhosts
-      when: "'dev' in group_names"

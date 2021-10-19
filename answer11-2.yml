@@ -1,9 +1,0 @@
----
-- name: create new symlink for default target
-  hosts: all
-  tasks:
-    - name: Create default target to multi-user.target
-      file:
-        src: /usr/lib/systemd/system/graphical.target
-        dest: /etc/systemd/system/default.target
-        state: link
