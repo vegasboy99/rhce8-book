@@ -1,5 +1,4 @@
 ---
-
 - name: issue file
   hosts: dev,prod
   tasks:
@@ -13,7 +12,6 @@
         content: Production
         dest: /tmp/issue
       when: "'prod' in group_names"
-    
     
     - name: show production system content
       shell: cat /tmp/issue
