@@ -1,0 +1,26 @@
+---
+    - name: start and enable httpd
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: start and enable the firewall
+      service:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: allow http traffic through
+      firewalld:
+        service: http
+        state: enabled
+        immediate: yes
+        permanent: yes
+
+    - name: copy down template for index html
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+      notify:
+        - restart

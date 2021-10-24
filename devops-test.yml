@@ -1,0 +1,46 @@
+---
+- name: set up http firewall and selinux and restart httpd
+  hosts: webservers
+  tasks:
+    - name: create devops user
+      user:
+        name: devops
+        state: present
+
+    - name: create new web directory
+      file:
+        mode: '2775'
+        path: /web
+        group: devops
+        owner: devops
+        state: directory
+
+    - name: create symlink to html directory
+      file:
+        src: /web
+        path: /var/www/html/web
+        state: link
+
+    - name: make new index.html file 
+      copy:
+        content: Development
+        dest: /web/index.html
+
+    - name: install selinux core policy package
+      yum:
+        name: python3-policycoreutils
+        state: latest
+
+    - name: change selinux on new directory
+      sefcontext:
+        target: '/web(/.*)?'
+        setype: httpd_sys_content_t
+        state: present
+
+    - name: run restorecon
+      command: restorecon -Rv /web
+
+    - name: restart httpd
+      service:
+        name: httpd
+        state: restarted

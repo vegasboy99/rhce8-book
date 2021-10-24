@@ -6,19 +6,19 @@
     debug:
       msg: "No Second Disk found"
     when:
-      - ansible_facts['devices']['sdb'] is not defined
+      - ansible_facts['ansible_devices']['nvme0n2'] is not defined
   - name: create LV on > 1G
     block:
       - name: Create 1500 partition
         parted:
-          device: /dev/sdb
+          device: /dev/nvme0n2
           number: 1
           part_end: 1.8GiB
           state: present
 
       - name: Create Vol Group
         lvg:
-          pvs: /dev/sdb1
+          pvs: /dev/nvme0n2p1
           vg: vgdata
           state: present
       - name: Create LV
@@ -31,19 +31,9 @@
         filesystem:
           dev: /dev/vgdata/lvdata
           fstype: xfs
-      - name: Create Mount Point
-        file:
-          path: /share1
-          state: directory
-      - name: mount file system
-        mount:
-          src: /dev/vgdata/lvdata
-          path: /share
-          fstype: xfs
-          state: mounted
     when:  
-      - ansible_facts['devices']['sdb']  is defined
-      - ansible_facts['devices']['sdb']['size']  > "1000000"
+      - ansible_facts['devices']['nvme0n2']  is defined
+      - ansible_facts['devices']['nvme0n2']['size']  > "1000000"
         
   - name: create LV on > 1G
     block:
@@ -52,14 +42,14 @@
           msg: Small disk found
       - name: Create 800M LV
         parted:
-          device: /dev/sdb
+          device: /dev/nvme0n2
           number: 1
           part_end: 900MiB
           state: present
 
       - name: Create Vol Group
         lvg:
-          pvs: /dev/sdb1
+          pvs: /dev/nvme0n2p1
           vg: vgdata
           state: present
       - name: Create LV
@@ -72,16 +62,6 @@
         filesystem:
           dev: /dev/vgdata/lvdata
           fstype: xfs
-      - name: Create Mount Point
-        file:
-          path: /share1
-          state: directory
-      - name: mount file system
-        mount:
-          src: /dev/vgdata/lvdata
-          path: /share
-          fstype: xfs
-          state: mounted
     when:  
-      - ansible_facts['devices']['sdb']  is defined
-      - ansible_facts['devices']['sdb']['size']  <= "1000000"
+      - ansible_facts['devices']['nvme0n2']  is defined
+      - ansible_facts['devices']['nvme0n2']['size']  <= "1000000"

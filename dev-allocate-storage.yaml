@@ -1,18 +1,20 @@
 ---
 - name: allocate storage
   hosts:
-    - ansible1.example.com
-    - ansible2.example.com
+    - ansible1
+    - ansible2
+    - ansible3
   vars:
     - disk_name: nvme0n2
     - partition_number: 1
     - vg_name: vg0
     - lv_name: lv0
     - disk_gb_threshold: 1
-    - disk_bytes_threshold: "{{ disk_gb_threshold * 1024 * 1024 * 1024 }}"
+    - disk_bytes_threshold: "1000000000 | int"
+    #- disk_bytes_threshold: "{{ disk_gb_threshold * 1024 * 1024 * 1024 }}"
     - large_lv_size: 1500M
     - small_lv_size: 800M
-    - disk_bytes: "{{ lsblk.stdout }}"
+    - disk_bytes: "{{ lsblk.stdout }} | int"
   tasks:
 
     - name: abort if second disk does not exist
@@ -36,7 +38,7 @@
     - name: create volume group
       lvg:
         vg: "{{ vg_name }}"
-        pvs: "/dev/{{ disk_name }}{{ partition_number }}"
+        pvs: "/dev/{{ disk_name }}p{{ partition_number }}"
 
     - name: create large logical volume
       lvol:
@@ -55,7 +57,7 @@
         - name: notify user if a small disk was found
           debug:
             msg: "small disk found"
-      when: disk_bytes <= disk_bytes_threshold
+      when: disk_bytes < disk_bytes_threshold
 
     - name: create filesystem
       filesystem:

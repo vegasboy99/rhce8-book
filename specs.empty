@@ -1,6 +1,6 @@
 # specs.empty file
-HOST=
-MEMORY=
-BIOS=
-VDA_DISK_SIZE=
+HOST=add host here
+MEMORY=add memory
+BIOS=add bios
+VDA_DISK_SIZE=sizes
 VDB_DISK_SIZE=

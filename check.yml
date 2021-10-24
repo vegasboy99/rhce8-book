@@ -1,0 +1,43 @@
+---
+- name: populate file with facts
+  hosts: all
+  tasks:
+    - name: copy file to hosts
+      copy:
+        src: specs.empty
+        dest: /tmp/spec.txt
+
+    - name: change hostname
+      lineinfile:
+        regexp: ^HOSTNAME
+        line: HOSTNAME={{ansible_hostname}}
+        path: /tmp/spec.txt
+        state: present
+
+    - name: change bios version
+      lineinfile:
+        regex: ^BIOS
+        line: BIOS={{ansible_bios_version}}
+        state: present
+        path: /tmp/spec.txt
+
+    - name: change memory
+      lineinfile:
+        regex: ^MEMORY
+        line: MEMORY={{ansible_memtotal_mb}}
+        state: present
+        path: /tmp/spec.txt
+
+    - name: change vda
+      lineinfile:
+        regexp: ^VDA_DISK
+        line: VDA_DISK={%if ansible_devices.vda is defined%}{{ansible_devices.vda.size}}{%else%}NONE{%endif%}
+        state: present
+        path: /tmp/spec.txt
+
+    - name: change vdb
+      lineinfile:
+        regex: ^VDB_DISK
+        line: VDB_DISK={%if ansible_devices.vdb is defined%}{{ansible_devices.vdb.size}}{%else%}NONE{%endif%}
+        state: present
+        path: /tmp/spec.txt
