@@ -1,0 +1,27 @@
+---
+- name: create users using a loop from a list
+  hosts: servera
+  vars_files: vars/users-list
+  tasks:
+  - name: create users
+    vars:
+      pwd: "{{ lookup('password', 'credentials/' + item.username + ' length=9') }}"
+    user:
+      name: "{{ item.username }}"
+      comment: "{{ item.first | capitalize }} {{ item.last | capitalize }}"
+      state: present
+      groups: "{{ item.groups }}"
+      shell: "{{ item.shell }}"
+      password: "{{ pwd | password_hash('sha512') }}"
+      generate_ssh_key: yes
+      ssh_key_file: .ssh/{{ item.username }}
+      update_password: on_create
+    loop: "{{ users }}"
+
+
+#- name: Set authorized key taken from file
+#  ansible.posix.authorized_key:
+#    user: charlie
+#    state: present
+#    key: "{{ lookup('file', '/home/charlie/.ssh/id_rsa.pub') }}"
+
