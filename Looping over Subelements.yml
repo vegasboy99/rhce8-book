@@ -1,0 +1,68 @@
+Looping over Subelements¶
+
+Suppose you want to do something like loop over a list of users, creating them, and allowing them to login by a certain set of SSH keys.
+
+In this example, we’ll assume you have the following defined and loaded in via “vars_files” or maybe a “group_vars/all” file:
+
+---
+users:
+  - name: alice
+    authorized:
+      - /tmp/alice/onekey.pub
+      - /tmp/alice/twokey.pub
+    mysql:
+        password: mysql-password
+        hosts:
+          - "%"
+          - "127.0.0.1"
+          - "::1"
+          - "localhost"
+        privs:
+          - "*.*:SELECT"
+          - "DB1.*:ALL"
+  - name: bob
+    authorized:
+      - /tmp/bob/id_rsa.pub
+    mysql:
+        password: other-mysql-password
+        hosts:
+          - "db1"
+        privs:
+          - "*.*:SELECT"
+          - "DB2.*:ALL"
+You could loop over these subelements like this:
+
+- name: Create User
+  user:
+    name: "{{ item.name }}"
+    state: present
+    generate_ssh_key: yes
+  with_items:
+    - "{{ users }}"
+
+- name: Set authorized ssh key
+  authorized_key:
+    user: "{{ item.0.name }}"
+    key: "{{ lookup('file', item.1) }}"
+  with_subelements:
+     - "{{ users }}"
+     - authorized
+Given the mysql hosts and privs subkey lists, you can also iterate over a list in a nested subkey:
+
+- name: Setup MySQL users
+  mysql_user:
+    name: "{{ item.0.name }}"
+    password: "{{ item.0.mysql.password }}"
+    host: "{{ item.1 }}"
+    priv: "{{ item.0.mysql.privs | join('/') }}"
+  with_subelements:
+    - "{{ users }}"
+    - mysql.hosts
+Subelements walks a list of hashes (aka dictionaries) and then traverses a list with a given (nested sub-)key inside of those records.
+
+Optionally, you can add a third element to the subelements list, that holds a dictionary of flags. Currently you can add the ‘skip_missing’ flag. If set to True, the lookup plugin will skip the lists items that do not contain the given subkey. Without this flag, or if that flag is set to False, the plugin will yield an error and complain about the missing subkey.
+
+The authorized_key pattern is exactly where it comes up most.
+
+https://ansible.readthedocs.io/en/stable/playbooks_loops.html
+
